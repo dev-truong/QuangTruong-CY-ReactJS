@@ -1,27 +1,23 @@
 import {createBrowserRouter, Link} from "react-router-dom";
-import ComponentA from "../components/ComponentA.jsx";
-import ComponentB from "../components/ComponentB.jsx";
 import NoteApp from "../components/NoteApp.jsx";
+import NoteAppZustand from "../components/NoteAppZustand.jsx";
 export const router = createBrowserRouter([
     {
         path: "/",
         element: (
             <div>
                 <h1>Hello World</h1>
-                <Link to="about">About Us</Link>
+                <Link to="noteapp" className='hover:text-red-500'>Noteapp</Link>
+                <Link to="noteapp-zustand" className='hover:text-red-500 block'>Noteapp use zustand</Link>
             </div>
         ),
     },
     {
-        path: "/add",
-        element: <ComponentA/>,
-    },
-    {
-        path: "/about",
-        element: <ComponentB/>,
-    },
-    {
         path: "/noteapp",
         element: <NoteApp/>,
+    },
+    {
+        path: "/noteapp-zustand",
+        element: <NoteAppZustand/>,
     },
 ]);

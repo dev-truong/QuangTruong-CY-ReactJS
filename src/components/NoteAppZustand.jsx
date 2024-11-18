@@ -1,60 +1,43 @@
+import {FaRegEdit, FaRegSave} from "react-icons/fa";
 import {FiPlusCircle} from "react-icons/fi";
-import {FaRegEdit} from "react-icons/fa";
 import {MdDeleteForever} from "react-icons/md";
-import {FaRegSave} from "react-icons/fa";
 import {useState} from "react";
+import useNoteStore from "../store/useNoteStore.js";
 
-const NoteApp = () => {
-
+const NoteAppZustand = () => {
+    const {notes, removeNotes, editNotes, addNotes} = useNoteStore();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [notes, setNotes] = useState([]);
     const [editMode, setEditMode] = useState({
         status: false,
         currentId: null
     })
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!editMode.status) {
-            const newNote = {
+            addNotes({
                 title: title,
                 content: content,
                 id: Math.random()
-            }
-            console.log(newNote.id)
-            setNotes([...notes, newNote]);
+            })
             setTitle("")
             setContent("")
-            return;
         }
-        const updatedNote = notes.map((note) => {
-            if (note.id === editMode.currentId) {
-                return {
-                    ...note,
-                    title: title,
-                    content: content
-                }
-            }
-            return note;
+        editNotes(editMode.currentId, {
+            title: title,
+            content: content
         })
-        setNotes(updatedNote)
-        setEditMode({status: false, currentId: null})
         setTitle("")
         setContent("")
+        setEditMode({status: false, currentId: null})
     }
-
-    const deleteNote = (id) => {
-        setNotes(notes.filter((note) => note.id !== id));
-    }
-
 
     const handleEdit = (id) => {
-
         setEditMode({status: true, currentId: id})
         const note = notes.find((note) => note.id === id);
         setTitle(note.title);
         setContent(note.content);
-        console.log('editing')
     }
 
     return (
@@ -81,7 +64,7 @@ const NoteApp = () => {
                 </textarea>
                     <button
                         type="submit"
-                        className="bg-blue-500 rounded-full text-white hover:bg-blue-600 absolute right-4 top-24 p-2"
+                        className="bg-blue-500 rounded-full text-white hover:bg-blue-600 absolute right-4 top-20 p-2"
                     >
                         {editMode.status ? <FaRegSave className="size-6"/> : <FiPlusCircle className="size-6"/>}
                     </button>
@@ -97,7 +80,7 @@ const NoteApp = () => {
                             />
                             <MdDeleteForever
                                 className="size-6 text-red-500 hover:text-red-800 cursor-pointer"
-                                onClick={() => deleteNote(note.id)}
+                                onClick={() => removeNotes(note.id)}
                             />
                         </div>
                         <h2 className="text-xl font-bold text-center">{note.title}</h2>
@@ -106,9 +89,8 @@ const NoteApp = () => {
                     </div>
                 ))}
             </div>
-
         </div>
     );
-};
+}
 
-export default NoteApp;
+export default NoteAppZustand;
